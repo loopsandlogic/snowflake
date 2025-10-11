@@ -1,0 +1,7 @@
+dotenv
+snowflake-connector-python
+boto3
+snowflake-connector-python[pandas]
+pandas
+mimesis
+faker
