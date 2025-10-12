@@ -20,20 +20,26 @@ conn = connect(
     schema=os.getenv('SCHEMA')
 )
 
+sc = conn.cursor()
+
 person = Person(Locale.EN)
 
 data = []
+conunter = 100
 for _ in range(100):
+    conunter += 1
     emp = {
-        "ID": random.randint(100, 999),
+        "ID": conunter,
         "NAME": person.full_name(),
         "DEPARTMENT": random.choice(['HR', 'Engineering', 'Marketing', 'Sales']),
-        "SALARY": round(random.uniform(60000, 150000), 2)
+        "SALARY": random.randint(60000, 150000)
     }
     data.append(emp)
 
 emp_df = pd.DataFrame(data, columns=['ID', 'NAME', 'DEPARTMENT', 'SALARY'])
 
+# Truncate the table if it exists
+sc.execute("TRUNCATE TABLE IF EXISTS EMPLOYEES")
 
 # Write the DataFrame to a Snowflake table
 success, nchunks, nrows, _ = write_pandas(conn, emp_df, 'EMPLOYEES')
